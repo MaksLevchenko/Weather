@@ -1,2 +1,2 @@
-open_weather_token = '79cab3296ebb60fbaffc832de5b234f8'
-telegram_token = "5742349132:AAEiToGpIk6inkutF9EnbjZy26ez3vo8UbY"
+open_weather_token = 'YOUR_TOKEN'
+telegram_token = "YOUR_TOKEN"
