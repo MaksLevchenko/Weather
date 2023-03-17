@@ -1,8 +1,10 @@
 import datetime
-
-from config import open_weather_token
-from pprint import pprint
+import os
 import requests
+from dotenv import load_dotenv, find_dotenv
+
+load_dotenv(find_dotenv())
+
 
 def get_weather(city, open_weather_token):
     try:
@@ -43,15 +45,17 @@ def get_weather(city, open_weather_token):
               f"\nВлажность: {humidity}\nМаксимальная температура: {temp_max}°С"
               f"\nМинимальная температура: {temp_min}°С\nДавление: {pressure}мм рт.ст."
               f"\nСкорость ветра: {speed_wind}м\\с\nВремя рассвета: {sunrise}"
-              f"\nВремя заката: {sunset}\nСветовой день: {sunset-sunrise}")
+              f"\nВремя заката: {sunset}\nСветовой день: {sunset - sunrise}")
 
     except Exception as ex:
         print(ex)
         print("Проверьте название города!")
 
+
 def main():
     city = input("Введите город на латинском: ")
-    get_weather(city, open_weather_token)
+    get_weather(city, os.getenv('open_weather_token'))
+
 
 if __name__ == "__main__":
     main()

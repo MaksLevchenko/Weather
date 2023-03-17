@@ -1,20 +1,26 @@
+import os
+
 from aiogram import Bot, Dispatcher, types, executor
-from config import telegram_token, open_weather_token
 import requests
 import datetime
+from dotenv import load_dotenv, find_dotenv
 
-bot = Bot(token=telegram_token)
+load_dotenv(find_dotenv())
+
+bot = Bot(token=os.getenv('telegram_token'))
 dp = Dispatcher(bot)
+
 
 @dp.message_handler(commands=["start"])
 async def start(messege: types.Message):
     await messege.reply("Привет напиши мне название города на латинском: ")
 
+
 @dp.message_handler()
 async def get_weather(messege: types.Message):
     try:
         r = requests.get(
-            f"http://api.openweathermap.org/data/2.5/weather?q={messege.text}&appid={open_weather_token}&units=metric"
+            f"http://api.openweathermap.org/data/2.5/weather?q={messege.text}&appid={os.getenv('open_weather_token')}&units=metric"
         )
         data = r.json()
 
@@ -46,11 +52,11 @@ async def get_weather(messege: types.Message):
         sunset = datetime.datetime.fromtimestamp(data['sys']['sunset'])
 
         await messege.reply(f"На {datetime.datetime.now().strftime('%d-%m-%Y %H:%M')}\n"
-              f"Температура в городе: {city}\nТемпература: {cur_weather}°С {wd}"
-              f"\nВлажность: {humidity}\nМаксимальная температура: {temp_max}°С"
-              f"\nМинимальная температура: {temp_min}°С\nДавление: {pressure}мм рт.ст."
-              f"\nСкорость ветра: {speed_wind}м\\с\nВремя рассвета: {sunrise}"
-              f"\nВремя заката: {sunset}\nСветовой день: {sunset-sunrise}"
+                            f"Температура в городе: {city}\nТемпература: {cur_weather}°С {wd}"
+                            f"\nВлажность: {humidity}\nМаксимальная температура: {temp_max}°С"
+                            f"\nМинимальная температура: {temp_min}°С\nДавление: {pressure}мм рт.ст."
+                            f"\nСкорость ветра: {speed_wind}м\\с\nВремя рассвета: {sunrise}"
+                            f"\nВремя заката: {sunset}\nСветовой день: {sunset - sunrise}"
                             f"\nОтличного дня!")
 
     except:
@@ -60,4 +66,3 @@ async def get_weather(messege: types.Message):
 
 if __name__ == "__main__":
     executor.start_polling(dp)
-
